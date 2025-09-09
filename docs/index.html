@@ -27,10 +27,21 @@
       margin-bottom: 8px;
       border-radius: 6px;
     }
+    .btn {
+      margin-top: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+    }
+    .btn-use {
+      background: #1877f2;
+      color: #fff;
+    }
   </style>
 </head>
 <body>
-  <h2>🔑 Simpan Cookies Akun Facebook</h2>
+  <h2>🔑 Simpan & Gunakan Cookies Facebook</h2>
   
   <label>Nama Akun</label>
   <input type="text" id="namaAkun" placeholder="contoh: Akun 1">
@@ -46,7 +57,6 @@
   </div>
 
   <script>
-    // Buka IndexedDB
     const DB_NAME = "CookiesDB";
     const STORE_NAME = "cookies";
     let db;
@@ -88,6 +98,24 @@
       });
     }
 
+    async function gunakanCookies(cookiesString) {
+      try {
+        const cookies = JSON.parse(cookiesString);
+        cookies.forEach(c => {
+          let cookieStr = `${c.name}=${c.value}; path=${c.path || "/"};`;
+          if (c.domain) cookieStr += ` domain=${c.domain};`;
+          if (c.secure) cookieStr += " Secure;";
+          if (c.httpOnly) cookieStr += " HttpOnly;";
+          document.cookie = cookieStr;
+        });
+        alert("✅ Cookies diset! Mengarahkan ke Facebook...");
+        window.location.href = "https://m.facebook.com";
+      } catch (err) {
+        console.error(err);
+        alert("❌ Gagal gunakan cookies");
+      }
+    }
+
     function renderAkunList(data) {
       const container = document.getElementById("akunContainer");
       container.innerHTML = "";
@@ -96,8 +124,11 @@
         div.className = "akun-item";
         div.innerHTML = `
           <strong>${item.nama}</strong><br>
-          <small>${item.cookies.substring(0, 80)}...</small>
+          <small>${item.cookies.substring(0, 80)}...</small><br>
+          <button class="btn btn-use">Gunakan Cookies</button>
         `;
+        const btn = div.querySelector("button");
+        btn.addEventListener("click", () => gunakanCookies(item.cookies));
         container.appendChild(div);
       });
     }
@@ -122,7 +153,6 @@
       }
     });
 
-    // Inisialisasi
     (async () => {
       await openDB();
       const data = await ambilSemuaCookies();
