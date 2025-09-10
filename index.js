@@ -16,6 +16,7 @@ const puppeteer = require("puppeteer");
 );
 
     
+
     // Set cookies login Facebook
     await page.setCookie(...cookies);
 
@@ -25,14 +26,18 @@ const puppeteer = require("puppeteer");
     });
 
     // Klik tombol "Write something..."
-    await page.waitForSelector("div[role='button'][tabindex='0']", { visible: true });
-    await page.click("div[role='button'][tabindex='0']");
+await page.waitForSelector("div[role='button'][tabindex='0']", { visible: true });
+await page.click("div[role='button'][tabindex='0']");
 
-    // Tunggu kotak caption muncul
-    await page.waitForSelector("textarea[name='xc_message']", { visible: true });
+// Tunggu composer muncul
+await page.waitForTimeout(3000);
 
-    // Isi caption
-    await page.type("textarea[name='xc_message']", "Hello grup ini test auto posting 🚀");
+// Cari textbox caption
+await page.waitForSelector("textarea[name='xc_message'], textarea[name='message'], div[contenteditable='true']", { visible: true });
+
+// Isi caption
+const textbox = await page.$("textarea[name='xc_message'], textarea[name='message'], div[contenteditable='true']");
+await textbox.type("Hello grup ini test auto posting 🚀");
 
     // Upload foto/video (file harus ada di repo!)
    // const fileInput = await page.$("input[type='file'][accept*='image'], input[type='file'][accept*='video']");
