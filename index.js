@@ -11,11 +11,16 @@ const puppeteer = require("puppeteer");
     });
     const page = await browser.newPage();
 
+    await page.setUserAgent(
+  "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.74 Mobile Safari/537.36"
+);
+
+    
     // Set cookies login Facebook
     await page.setCookie(...cookies);
 
     // Buka grup
-    await page.goto("https://m.facebook.com/groups/123456789", {
+    await page.goto("https://facebook.com/groups/343495659674510/", {
       waitUntil: "networkidle2"
     });
 
@@ -30,11 +35,11 @@ const puppeteer = require("puppeteer");
     await page.type("textarea[name='xc_message']", "Hello grup ini test auto posting 🚀");
 
     // Upload foto/video (file harus ada di repo!)
-    const fileInput = await page.$("input[type='file'][accept*='image'], input[type='file'][accept*='video']");
-    await fileInput.uploadFile("./media/test.jpg"); // file ini harus ada di repo
+   // const fileInput = await page.$("input[type='file'][accept*='image'], input[type='file'][accept*='video']");
+    //await fileInput.uploadFile("./media/test.jpg"); // file ini harus ada di repo
 
     // Tunggu upload selesai
-    await page.waitForTimeout(5000);
+   // await page.waitForTimeout(5000);
 
     // Klik tombol POST
     await page.waitForSelector("button[type='submit']", { visible: true });
